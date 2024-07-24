@@ -1,55 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Unity WebGL Game</title>
-    <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-        #unityContainer {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        canvas {
-            width: 100%;
-            height: 100%;
-        }
-    </style>
-    <script>
-        // Функция для принудительной установки ландшафтной ориентации
-        function enforceLandscape() {
-            if (window.innerHeight > window.innerWidth) {
-                document.body.style.transform = 'rotate(90deg)';
-                document.body.style.width = '100vh';
-                document.body.style.height = '100vw';
-                document.body.style.transformOrigin = 'center center';
-            } else {
-                document.body.style.transform = '';
-                document.body.style.width = '100%';
-                document.body.style.height = '100%';
-            }
-        }
-        window.addEventListener('resize', enforceLandscape);
-        window.addEventListener('load', enforceLandscape);
-    </script>
+    <meta charset="utf-8">
+    <title>My WebGL Build</title>
+    <script src="orientation.js"></script>
 </head>
 <body>
-    <div id="unityContainer">
-        <canvas></canvas>
-    </div>
-    <script src="Build/UnityLoader.js"></script>
+    <div id="unityContainer" style="width: 960px; height: 600px"></div>
     <script>
-        var gameInstance = UnityLoader.instantiate("unityContainer", "Build/BuildName.json", {onProgress: UnityProgress});
+        var buildUrl = "Build";
+        var loaderUrl = buildUrl + "/myBuild.loader.js";
+        var config = {
+            dataUrl: buildUrl + "/myBuild.data",
+            frameworkUrl: buildUrl + "/myBuild.framework.js",
+            codeUrl: buildUrl + "/myBuild.wasm",
+            streamingAssetsUrl: "StreamingAssets",
+            companyName: "My Company",
+            productName: "My Product",
+            productVersion: "1.0",
+        };
+
+        var script = document.createElement("script");
+        script.src = loaderUrl;
+        script.onload = () => {
+            createUnityInstance(document.querySelector("#unityContainer"), config, (progress) => {
+                console.log(progress);
+            }).then((unityInstance) => {
+                console.log("Unity loaded");
+            }).catch((message) => {
+                alert(message);
+            });
+        };
+        document.body.appendChild(script);
     </script>
 </body>
 </html>

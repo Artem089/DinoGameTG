@@ -18,18 +18,25 @@
       height: 100%;
       background: url('Build/DinOGAME.jpg') center / cover;
     }
+    .landscape {
+      transform: rotate(90deg);
+      transform-origin: center center;
+      width: 100vh;
+      height: 100vw;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
   </style>
   <script>
     function enforceLandscape() {
       if (window.innerHeight > window.innerWidth) {
-        document.body.style.transform = 'rotate(90deg)';
-        document.body.style.width = '100vh';
-        document.body.style.height = '100vw';
-        document.body.style.transformOrigin = 'center center';
+        document.body.classList.add('landscape');
       } else {
-        document.body.style.transform = '';
-        document.body.style.width = '100%';
-        document.body.style.height = '100%';
+        document.body.classList.remove('landscape');
       }
     }
     window.addEventListener('resize', enforceLandscape);

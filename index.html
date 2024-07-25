@@ -29,7 +29,7 @@
         padding: 20px;
         border-radius: 10px;
         font-size: 1.5em;
-        z-index: 1000;
+        z-index: 100;
       }
     </style>
   </head>
@@ -40,18 +40,10 @@
     <canvas id="unity-canvas" width="2560" height="1140" tabindex="-1"></canvas>
     <script src="Build/DinOGAME.loader.js"></script>
     <script>
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        var meta = document.createElement('meta');
-        meta.name = 'viewport';
-        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-        document.getElementsByTagName('head')[0].appendChild(meta);
-
-        document.body.style.textAlign = "left";
-      }
+      var warning = document.getElementById('orientation-warning');
+      var canvas = document.getElementById('unity-canvas');
 
       function checkOrientation() {
-        var warning = document.getElementById('orientation-warning');
-        var canvas = document.getElementById('unity-canvas');
         if (window.innerHeight > window.innerWidth) {
           warning.style.display = 'block';
           canvas.style.display = 'none';
@@ -61,19 +53,39 @@
         }
       }
 
-      window.addEventListener('resize', checkOrientation);
-      window.addEventListener('load', function() {
-        checkOrientation();
-        createUnityInstance(document.querySelector("#unity-canvas"), {
-          dataUrl: "Build/DinOGAME.data",
-          frameworkUrl: "Build/DinOGAME.framework.js",
-          codeUrl: "Build/DinOGAME.wasm",
-          streamingAssetsUrl: "StreamingAssets",
-          companyName: "DefaultCompany",
-          productName: "DinoGame",
-          productVersion: "1.0",
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+        document.body.style.textAlign = "left";
+
+        window.addEventListener('orientationchange', function() {
+          switch(window.orientation) {  
+            case -90:
+            case 90:
+              checkOrientation();
+              break; 
+            default:
+              checkOrientation();
+              break; 
+          }
         });
-      });
+
+        window.addEventListener('resize', checkOrientation);
+        window.addEventListener('load', function() {
+          checkOrientation();
+          createUnityInstance(document.querySelector("#unity-canvas"), {
+            dataUrl: "Build/DinOGAME.data",
+            frameworkUrl: "Build/DinOGAME.framework.js",
+            codeUrl: "Build/DinOGAME.wasm",
+            streamingAssetsUrl: "StreamingAssets",
+            companyName: "DefaultCompany",
+            productName: "DinoGame",
+            productVersion: "1.0",
+          });
+        });
+      }
     </script>
   </body>
 </html>

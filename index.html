@@ -1,79 +1,79 @@
 <!DOCTYPE html>
 <html lang="en-us">
-<head>
+  <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Unity WebGL Player | DinoGame</title>
     <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            text-align: center;
-        }
-        #unity-canvas {
-            width: 100%;
-            height: 100%;
-            background: url('Build/DinOGAME.jpg') center / cover;
-        }
-        .landscape {
-            transform: rotate(90deg);
-            transform-origin: center center;
-            width: 100vh;
-            height: 100vw;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-        }
+      body, html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        text-align: center;
+      }
+      #unity-canvas {
+        background: url('Build/DinOGAME.jpg') center / cover;
+        width: 100vw;
+        height: 100vh;
+      }
+      .orientation-warning {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        font-size: 1.5em;
+      }
     </style>
-    <script>
-        function enforceLandscape() {
-            var canvas = document.getElementById('unity-canvas');
-            if (window.innerHeight > window.innerWidth) {
-                canvas.classList.add('landscape');
-            } else {
-                canvas.classList.remove('landscape');
-            }
-        }
-        window.addEventListener('resize', enforceLandscape);
-        window.addEventListener('load', enforceLandscape);
-    </script>
-</head>
-<body>
+  </head>
+  <body>
+    <div id="orientation-warning" class="orientation-warning">
+      Please rotate your device to landscape mode to play the game.
+    </div>
     <canvas id="unity-canvas" width="2560" height="1140" tabindex="-1"></canvas>
     <script src="Build/DinOGAME.loader.js"></script>
     <script>
-        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-            // Mobile device style: fill the whole browser client area with the game canvas:
-            var meta = document.createElement('meta');
-            meta.name = 'viewport';
-            meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-            document.getElementsByTagName('head')[0].appendChild(meta);
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        // Mobile device style: fill the whole browser client area with the game canvas:
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
 
-            var canvas = document.querySelector("#unity-canvas");
-            canvas.style.width = "100%";
-            canvas.style.height = "100%";
-            canvas.style.position = "fixed";
+        document.body.style.textAlign = "left";
+      }
 
-            document.body.style.textAlign = "left";
+      function checkOrientation() {
+        var warning = document.getElementById('orientation-warning');
+        var canvas = document.getElementById('unity-canvas');
+        if (window.innerHeight > window.innerWidth) {
+          warning.style.display = 'block';
+          canvas.style.display = 'none';
+        } else {
+          warning.style.display = 'none';
+          canvas.style.display = 'block';
         }
+      }
 
+      window.addEventListener('resize', checkOrientation);
+      window.addEventListener('load', function() {
+        checkOrientation();
         createUnityInstance(document.querySelector("#unity-canvas"), {
-            dataUrl: "Build/DinOGAME.data",
-            frameworkUrl: "Build/DinOGAME.framework.js",
-            codeUrl: "Build/DinOGAME.wasm",
-            streamingAssetsUrl: "StreamingAssets",
-            companyName: "DefaultCompany",
-            productName: "DinoGame",
-            productVersion: "1.0",
-            // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
-            // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
+          dataUrl: "Build/DinOGAME.data",
+          frameworkUrl: "Build/DinOGAME.framework.js",
+          codeUrl: "Build/DinOGAME.wasm",
+          streamingAssetsUrl: "StreamingAssets",
+          companyName: "DefaultCompany",
+          productName: "DinoGame",
+          productVersion: "1.0",
         });
+      });
     </script>
-</body>
+  </body>
 </html>

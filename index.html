@@ -63,6 +63,7 @@
       }
 
       window.addEventListener('resize', checkOrientation);
+      window.addEventListener('orientationchange', checkOrientation);  // Добавлен обработчик события изменения ориентации
       window.addEventListener('load', function() {
         checkOrientation();
         createUnityInstance(document.querySelector("#unity-canvas"), {

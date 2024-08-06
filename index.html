@@ -1,103 +1,128 @@
 <!DOCTYPE html>
 <html lang="en-us">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Unity WebGL Player | DinoGame</title>
     <style>
-      body, html {
-        margin: 0;
-        padding: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        text-align: center;
-      }
-      #unity-canvas {
-        background: url('Build/DinOGAME.jpg') center / cover;
-        width: 100%;
-        height: 100%;
-      }
-      .orientation-warning {
-        display: none;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: rgba(0, 0, 0, 0.8);
-        color: white;
-        padding: 20px;
-        border-radius: 10px;
-        font-size: 1.5em;
-        z-index: 100;
-      }
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            text-align: center;
+        }
+        #unity-canvas {
+            background: url('Build/DinOGAME.jpg') center / cover;
+            width: 100%;
+            height: 100%;
+        }
+        .orientation-warning {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 1.5em;
+            z-index: 100;
+        }
     </style>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
     <script>
-      // Конфигурация Firebase вашего веб-приложения
-      var firebaseConfig = {
-        apiKey: "AIzaSyCrWsnnFFPU9VcLFgsfncBqJIfbGmrXwII",
-        authDomain: "dinogame089.firebaseapp.com",
-        projectId: "dinogame089",
-        storageBucket: "dinogame089.appspot.com",
-        messagingSenderId: "754521578643",
-        appId: "1:754521578643:web:98513e87079cfa05dac166"
-      };
+        // Конфигурация Firebase вашего веб-приложения
+        var firebaseConfig = {
+          apiKey: "AIzaSyCrWsnnFFPU9VcLFgsfncBqJIfbGmrXwII",
+          authDomain: "dinogame089.firebaseapp.com",
+          databaseURL: "https://dinogame089-default-rtdb.firebaseio.com",
+          projectId: "dinogame089",
+          storageBucket: "dinogame089.appspot.com",
+          messagingSenderId: "754521578643",
+          appId: "1:754521578643:web:98513e87079cfa05dac166"
+        };
+        firebase.initializeApp(firebaseConfig);
 
-      // Инициализация Firebase
-      firebase.initializeApp(firebaseConfig);
+        function checkFirebaseConnection() {
+            firebase.database().ref('.info/connected').on('value', function(snapshot) {
+                if (snapshot.val() === true) {
+                    console.log("Connected to Firebase Database");
+                    alert("Connected to Firebase Database");
+                } else {
+                    console.log("Not connected to Firebase Database");
+                    alert("Not connected to Firebase Database");
+                }
+            });
+        }
 
-      // Функция для записи данных в базу данных Firebase
-      function writeUserData(userId, name) {
-        firebase.database().ref('users/' + userId).set({
-          username: name
-        });
-      }
+        checkFirebaseConnection();
+
+        function writeUserData(userId, name) {
+            firebase.database().ref('users/' + userId).set({
+                username: name
+            }, function(error) {
+                if (error) {
+                    console.log("Failed to write data:", error);
+                } else {
+                    console.log("Data written successfully");
+                }
+            });
+        }
+
+        function readUserData(userId, callback) {
+            firebase.database().ref('users/' + userId).once('value').then(function(snapshot) {
+                var data = snapshot.val();
+                callback(data ? data.username : "User not found");
+            });
+        }
     </script>
-  </head>
-  <body>
+</head>
+<body>
     <div id="orientation-warning" class="orientation-warning">
-      Please rotate your device to landscape mode to play the game.
+        Please rotate your device to landscape mode to play the game.
     </div>
     <canvas id="unity-canvas" tabindex="-1"></canvas>
     <script src="Build/DinOGAME.loader.js"></script>
     <script>
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        var meta = document.createElement('meta');
-        meta.name = 'viewport';
-        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-        document.getElementsByTagName('head')[0].appendChild(meta);
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+            var meta = document.createElement('meta');
+            meta.name = 'viewport';
+            meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+            document.getElementsByTagName('head')[0].appendChild(meta);
 
-        document.body.style.textAlign = "left";
-      }
-
-      function checkOrientation() {
-        var warning = document.getElementById('orientation-warning');
-        var canvas = document.getElementById('unity-canvas');
-        if (window.innerHeight > window.innerWidth) {
-          warning.style.display = 'block';
-          canvas.style.display = 'none';
-        } else {
-          warning.style.display = 'none';
-          canvas.style.display = 'block';
+            document.body.style.textAlign = "left";
         }
-      }
 
-      window.addEventListener('resize', checkOrientation);
-      window.addEventListener('orientationchange', checkOrientation);
-      window.addEventListener('load', function() {
-        checkOrientation();
-        createUnityInstance(document.querySelector("#unity-canvas"), {
-          dataUrl: "Build/DinOGAME.data",
-          frameworkUrl: "Build/DinOGAME.framework.js",
-          codeUrl: "Build/DinOGAME.wasm",
-          streamingAssetsUrl: "StreamingAssets",
-          companyName: "DefaultCompany",
-          productName: "DinoGame",
-          productVersion: "1.0",
+        function checkOrientation() {
+            var warning = document.getElementById('orientation-warning');
+            var canvas = document.getElementById('unity-canvas');
+            if (window.innerHeight > window.innerWidth) {
+                warning.style.display = 'block';
+                canvas.style.display = 'none';
+            } else {
+                warning.style.display = 'none';
+                canvas.style.display = 'block';
+            }
+        }
+
+        window.addEventListener('resize', checkOrientation);
+        window.addEventListener('orientationchange', checkOrientation);
+        window.addEventListener('load', function() {
+            checkOrientation();
+            createUnityInstance(document.querySelector("#unity-canvas"), {
+                dataUrl: "Build/DinOGAME.data",
+                frameworkUrl: "Build/DinOGAME.framework.js",
+                codeUrl: "Build/DinOGAME.wasm",
+                streamingAssetsUrl: "StreamingAssets",
+                companyName: "DefaultCompany",
+                productName: "DinoGame",
+                productVersion: "1.0",
+            });
         });
-      });
     </script>
-  </body>
+</body>
 </html>

@@ -32,54 +32,6 @@
             z-index: 100;
         }
     </style>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
-    <script>
-        // Конфигурация Firebase вашего веб-приложения
-        var firebaseConfig = {
-          apiKey: "AIzaSyCrWsnnFFPU9VcLFgsfncBqJIfbGmrXwII",
-          authDomain: "dinogame089.firebaseapp.com",
-          databaseURL: "https://dinogame089-default-rtdb.firebaseio.com",
-          projectId: "dinogame089",
-          storageBucket: "dinogame089.appspot.com",
-          messagingSenderId: "754521578643",
-          appId: "1:754521578643:web:98513e87079cfa05dac166"
-        };
-        firebase.initializeApp(firebaseConfig);
-
-        function checkFirebaseConnection() {
-            firebase.database().ref('.info/connected').on('value', function(snapshot) {
-                if (snapshot.val() === true) {
-                    console.log("Connected to Firebase Database");
-                    alert("Connected to Firebase Database");
-                } else {
-                    console.log("Not connected to Firebase Database");
-                    alert("Not connected to Firebase Database");
-                }
-            });
-        }
-
-        checkFirebaseConnection();
-
-        function writeUserData(userId, name) {
-            firebase.database().ref('users/' + userId).set({
-                username: name
-            }, function(error) {
-                if (error) {
-                    console.log("Failed to write data:", error);
-                } else {
-                    console.log("Data written successfully");
-                }
-            });
-        }
-
-        function readUserData(userId, callback) {
-            firebase.database().ref('users/' + userId).once('value').then(function(snapshot) {
-                var data = snapshot.val();
-                callback(data ? data.username : "User not found");
-            });
-        }
-    </script>
 </head>
 <body>
     <div id="orientation-warning" class="orientation-warning">

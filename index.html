@@ -32,6 +32,29 @@
         z-index: 100;
       }
     </style>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-database.js"></script>
+    <script>
+      // Конфигурация Firebase вашего веб-приложения
+      var firebaseConfig = {
+        apiKey: "AIzaSyCrWsnnFFPU9VcLFgsfncBqJIfbGmrXwII",
+        authDomain: "dinogame089.firebaseapp.com",
+        projectId: "dinogame089",
+        storageBucket: "dinogame089.appspot.com",
+        messagingSenderId: "754521578643",
+        appId: "1:754521578643:web:98513e87079cfa05dac166"
+      };
+
+      // Инициализация Firebase
+      firebase.initializeApp(firebaseConfig);
+
+      // Функция для записи данных в базу данных Firebase
+      function writeUserData(userId, name) {
+        firebase.database().ref('users/' + userId).set({
+          username: name
+        });
+      }
+    </script>
   </head>
   <body>
     <div id="orientation-warning" class="orientation-warning">
@@ -41,7 +64,6 @@
     <script src="Build/DinOGAME.loader.js"></script>
     <script>
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        // Mobile device style: fill the whole browser client area with the game canvas:
         var meta = document.createElement('meta');
         meta.name = 'viewport';
         meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
@@ -63,7 +85,7 @@
       }
 
       window.addEventListener('resize', checkOrientation);
-      window.addEventListener('orientationchange', checkOrientation);  // Добавлен обработчик события изменения ориентации
+      window.addEventListener('orientationchange', checkOrientation);
       window.addEventListener('load', function() {
         checkOrientation();
         createUnityInstance(document.querySelector("#unity-canvas"), {

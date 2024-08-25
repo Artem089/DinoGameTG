@@ -15,7 +15,7 @@
             background-color: white;
         }
         #unity-canvas {
-            background: url('Build/DinOGAME.jpg') center / cover;
+            background: url('Build/DinosaurikDino.jpg') center / cover;
             width: 100%;
             height: 100%;
         }
@@ -67,12 +67,12 @@
         window.addEventListener('load', function() {
             checkOrientation();
             createUnityInstance(document.querySelector("#unity-canvas"), {
-                dataUrl: "Build/DinOGAME.data",
-                frameworkUrl: "Build/DinOGAME.framework.js",
-                codeUrl: "Build/DinOGAME.wasm",
+                dataUrl: "Build/DinosaurikDino.data",
+                frameworkUrl: "Build/DinosaurikDino.framework.js",
+                codeUrl: "Build/DinosaurikDino.wasm",
                 streamingAssetsUrl: "StreamingAssets",
                 companyName: "DefaultCompany",
-                productName: "DinoGame",
+                productName: "DinosaurikDino",
                 productVersion: "1.0",
             });
         });
